@@ -28,7 +28,7 @@ public:
 		: std::runtime_error(__arg) {};
 	
 	/** デストラクタ */
-	~traceable_error() throw () {};
+	~traceable_error() {};
 	
 	/**
 	 * エラーメッセージ表示

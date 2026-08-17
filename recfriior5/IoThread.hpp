@@ -13,9 +13,11 @@
  * URB送信管理用
  */
 struct AsyncRequest {
-	usbdevfs_urb urb;
-	int fd;
 	uint8_t buf[TSDATASIZE];
+	int fd;
+	/* usbdevfs_urb は flexible array member(iso_frame_desc[]) を含むため、
+	   C++17 では値メンバとして埋め込めない。生バッファ + reinterpret_cast で扱う。 */
+	alignas(usbdevfs_urb) uint8_t urb[sizeof(usbdevfs_urb)];
 };
 
 /**

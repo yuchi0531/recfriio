@@ -204,7 +204,7 @@ protected:
 	 * 初期化されていない場合exceptionを投げる。
 	 * @exception not_ready_error 初期化されていない
 	 */
-	void assertInitialized() throw (not_ready_error);
+	void assertInitialized();
 	
 	/**
 	 * Request=0x40 RequestNo=0x01 で Length=0 のベンダリクエストを送信

@@ -9,6 +9,7 @@
 
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/directory.hpp>
 
 #include "usbops.hpp"
 #include "AutoCloser.hpp"
@@ -96,13 +97,14 @@ AbstractFriio::getStream(const uint8_t** bufp, int timeoutMsec)
 		return 0;
 	}
 	
-	if (req->urb.status != 0) {
+	const usbdevfs_urb *urb = reinterpret_cast<const usbdevfs_urb *>(req->urb);
+	if (urb->status != 0) {
 		std::ostringstream stream;
-		stream << "UrbStatus: " << req->urb.status;
+		stream << "UrbStatus: " << urb->status;
 		throw usb_error(stream.str());
 	}
 	
-	int rlen = req->urb.actual_length;
+	int rlen = urb->actual_length;
 	
 	*bufp = req->buf;
 	return rlen;
@@ -129,7 +131,7 @@ AbstractFriio::isStreamReady()
  * @exception not_ready_error 初期化されていない
  */
 void
-AbstractFriio::assertInitialized() throw (not_ready_error)
+AbstractFriio::assertInitialized()
 {
 	if (!initialized) {
 		throw not_ready_error("not initialized.");
@@ -216,7 +218,7 @@ AbstractFriio::searchFriios()
  * @return int ファイルディスクリプタ
  */
 int
-detectLock(std::string& lockFile) throw (io_error)
+detectLock(std::string& lockFile)
 {
 	// umaskを変更し、group,otherに書き込み権限を付加する。
 	mode_t orgmask = umask(0);
