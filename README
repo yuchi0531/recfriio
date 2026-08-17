@@ -2,6 +2,33 @@
 Linux用Friio録画プログラム(黒凡/白凡共通)です。
 こちらは亜流版ですのでご注意下さい。
 
+== 最新ツールチェーン対応 ==
+
+本リポジトリは最新のディストリビューション（GCC 15 / C++17 / Boost 1.87以降 / glibc 2.4x系、
+Ubuntu 24.04で確認）でビルドできるよう修正済みです。HDUS/HDP対応(as11loaderを除く)を含みます。
+
+ビルド方法:
+
+    # 必要パッケージのインストール
+    apt install -y build-essential libglib2.0-dev libboost-dev libboost-thread-dev libboost-filesystem-dev libpcsclite-dev
+
+    cd recfriior5
+    make clean   # 必須: Makefile.depが古いと差分ビルドで再コンパイルされないため
+    make
+    ./recfriio   # usageが表示されればOK
+
+対応済みの修正:
+
+  * C++17で廃止された動的例外仕様 `throw (...)` を除去
+  * `usbdevfs_urb` のflexible array member対策(構造体に直接埋め込めないため)
+  * Boost 1.87+ で分離された `boost/filesystem/directory.hpp` のinclude追加
+  * Boost 1.90+ で統合され存在しない `-lboost_system` を除去
+  * arib25/Makefileのリンク順修正(ライブラリをオブジェクトの後ろに配置)
+  * TS Splitter用バッファ `splitbuf_t` を32MB→1MBに縮小
+    (スタック上に32MB置くとスタック8MB制限で即セグフォするため。実録画では影響ありません)
+
+== 以下、オリジナルの説明 ==
+
 make でビルドした後、
 ./recfriio 録画するチャンネル 録画秒数 出力先ファイル名
 で録画されます。
