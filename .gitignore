@@ -1,0 +1,10 @@
+# ビルド成果物
+*.o
+*.trace
+
+# 実行ファイル
+recfriior5/recfriio
+arib25/b25
+
+# 依存関係自動生成ファイル
+Makefile.dep
